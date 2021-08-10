@@ -16,7 +16,6 @@ import java.io.File
 import java.util.concurrent.ExecutorService
 
 class MainActivity : AppCompatActivity() {
-    private var imageCapture: ImageCapture? = null
 
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
@@ -34,8 +33,6 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        outputDirectory = getOutputDirectory()
-
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -52,9 +49,6 @@ class MainActivity : AppCompatActivity() {
                 .also {
                     it.setSurfaceProvider(viewFinder.surfaceProvider)
                 }
-
-            imageCapture = ImageCapture.Builder()
-                .build()
 
             val imageAnalyzer = ImageAnalysis.Builder()
                 .build()
@@ -86,14 +80,6 @@ class MainActivity : AppCompatActivity() {
         ContextCompat.checkSelfPermission(
             baseContext, it
         ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun getOutputDirectory(): File {
-        val mediaDir = externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
-        }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else filesDir
     }
 
     override fun onDestroy() {
